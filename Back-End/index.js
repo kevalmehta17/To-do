@@ -2,6 +2,7 @@ const express = require("express");
 const { createTodo, updateTod } = require("./types");
 const { Todo } = require("./db");
 const app = express;
+const port = 1000;
 app.use(express.json());
 app.post("/todo", async (req, res) => {
   const createPayload = req.body;
@@ -58,3 +59,7 @@ app.put("/completed", async (req, res) => {
 });
 
 app.delte("/", (req, res) => {});
+
+app.listen(port, () => {
+  console.log(`http://localhost:${port}/`);
+});
