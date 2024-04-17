@@ -45,14 +45,11 @@ app.put("/completed", async (req, res) => {
     });
     return;
   }
-  await Todo.update(
-    {
-      _id: req.body.id,
-    },
-    {
-      completed: true,
-    }
+  await Todo.findOneAndUpdate(
+    { _id: req.body.id }, // The query to find the document
+    { completed: true } // The update to be applied
   );
+
   res.json({
     msg: "Task is Completed ",
   });

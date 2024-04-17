@@ -1,13 +1,16 @@
 const mongoose = require("mongoose");
 
 mongoose.connect(
-  "mongodb+srv://kevalmehta:helloworld@cluster0.kxy1m20.mongodb.net/"
+  "mongodb+srv://kevalmehta:helloworld@cluster0.kxy1m20.mongodb.net/todos"
 );
 
 const TodoSchema = new mongoose.Schema({
   title: String,
   description: String,
-  completed: Boolean,
+  completed: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Todo = mongoose.model("Todo", TodoSchema);
