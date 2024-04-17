@@ -1,8 +1,9 @@
 const express = require("express");
 const { createTodo, updateTod } = require("./types");
+const { Todo } = require("./db");
 const app = express;
 app.use(express.json());
-app.post("/todo", (req, res) => {
+app.post("/todo", async (req, res) => {
   const createPayload = req.body;
   const parsedPayload = createTodo.safeParse(createPayload);
   if (!parsedPayload.success) {
@@ -11,9 +12,30 @@ app.post("/todo", (req, res) => {
     });
     return;
   }
+  await Todo.create({
+    title: createPayload.title,
+    description: createPayload.description,
+    completed: false,
+  });
+  res.status(200).json({
+    msg: "Todo is Created",
+  });
 });
-app.get("/todos", (req, res) => {});
-app.put("/completed", (req, res) => {
+
+app.get("/todos", async (req, res) => {
+  try {
+    const todos = await Todo.find({});
+    res.status(200).json({
+      List: todos,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+  }
+});
+
+app.put("/completed", async (req, res) => {
   const updatePayload = req.body;
   const parsedPayload = updateTod.safeParse(updatePayload);
   if (!parsedPayload.success) {
@@ -22,5 +44,17 @@ app.put("/completed", (req, res) => {
     });
     return;
   }
+  await Todo.update(
+    {
+      _id: req.body.id,
+    },
+    {
+      completed: true,
+    }
+  );
+  res.json({
+    msg: "Task is Completed ",
+  });
 });
+
 app.delte("/", (req, res) => {});
